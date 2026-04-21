@@ -31,18 +31,19 @@ public class dangnhapdao {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 user xm = new user();
-                xm.setId(rs.getInt("id"));
+                // Sửa lại các tên cột cho đúng với ảnh chụp phpMyAdmin của bạn
+                xm.setId(rs.getInt("user_id")); // Trong ảnh là user_id, không phải id
                 xm.setUsername(rs.getString("username"));
                 xm.setPassword(rs.getString("password"));
                 xm.setRole(rs.getInt("role"));
                 xm.setEmail(rs.getString("email"));
-                xm.setFullnameString(rs.getString("fullnameString"));
+                xm.setFullnameString(rs.getString("full_name")); // Sửa từ fullnameString thành full_name
                 return xm;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null; // Trả về null nếu đăng nhập thất bại
+        return null;
     }
 
 }
