@@ -15,7 +15,7 @@ public class dangkydao {
     Connection connect = null;
     PreparedStatement ps = null;
 
-    public void Add(user u) {
+    public boolean Add(user u) {
         try {
             if (connect == null || connect.isClosed()) {
                 connect = new connectusear().connect();
@@ -28,9 +28,11 @@ public class dangkydao {
             ps.setString(3, u.getEmail());
             ps.setString(4, u.getFullnameString());
             ps.setInt(5, u.getRole() == 0 ? 1 : u.getRole()); // Mặc định role là 1 nếu chưa được set
-            ps.executeUpdate();
+            int row = ps.executeUpdate();
+            return row > 0;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return false;
     }
 }

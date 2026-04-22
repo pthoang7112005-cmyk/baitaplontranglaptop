@@ -163,6 +163,17 @@
                     <%= error %>
                 </div>
             <% } %>
+            <% 
+                String successMsg = (String) session.getAttribute("message");
+                if(successMsg != null) {
+            %>
+                <div style="color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center;">
+                    <%= successMsg %>
+                </div>
+            <% 
+                    session.removeAttribute("message");
+                } 
+            %>
             <form action="dangnhap" method="POST">
                 <div class="input-group">
                     <label for="username">Tên đăng nhập</label>

@@ -85,7 +85,7 @@
             .btn-register:hover {
                 background-color: #0056b3;
             }
-            
+
             .btn-register:active {
                 transform: scale(0.98);
             }
@@ -145,27 +145,50 @@
     <body>
         <div class="register-container">
             <h1>Đăng ký</h1>
-            <form action="#" method="POST">
-                <div class="input-group">
-                    <input type="text" name="username" placeholder="Nhập tên đăng nhập" required>
+            <form action="dangky" method="POST">
+                <%-- Hiển thị thông báo lỗi nếu có --%>
+                <%
+                    String error = (String) request.getAttribute("error");
+                    if (error != null) {
+                %>
+                <div style="color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 10px; border-radius: 5px; margin-bottom: 20px; text-align: center;">
+                    <%= error%>
                 </div>
-                <div class="input-group">
-                    <input type="password" name="password" placeholder="Nhập mật khẩu" required>
+                <% } %>
+
+                <%
+                    // Lấy thông báo thành công từ session
+                    String successMsg = (String) session.getAttribute("message");
+                    if (successMsg != null) {
+                %>
+                <div style="color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; padding: 10px; border-radius: 5px; margin-bottom: 20px; text-align: center;">
+                    <%= successMsg%>
                 </div>
+                <%
+                        // Xóa thông báo ngay sau khi hiển thị để khi F5 trang không hiện lại nữa
+                        session.removeAttribute("message");
+                    }
+                %>
                 <div class="input-group">
-                    <input type="password" name="repassword" placeholder="Nhập lại mật khẩu" required>
+                        <input type="text" name="username" placeholder="Nhập tên đăng nhập" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" name="password" placeholder="Nhập mật khẩu" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" name="repassword" placeholder="Nhập lại mật khẩu" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="email" name="email" placeholder="Email" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" name="fullname" placeholder="Nhập đầy đủ họ tên" required>
+                    </div>
+                    <button type="submit" class="btn-register">Đăng ký tài khoản</button>
+                </form>
+                <div class="login-link">
+                    Đã có tài khoản? <a href="dangnhap.jsp">Đăng nhập ngay</a>
                 </div>
-                <div class="input-group">
-                    <input type="email" name="email" placeholder="Email" required>
-                </div>
-                <div class="input-group">
-                    <input type="text" name="fullname" placeholder="Nhập đầy đủ họ tên" required>
-                </div>
-                <button type="submit" class="btn-register">Đăng ký tài khoản</button>
-            </form>
-            <div class="login-link">
-                Đã có tài khoản? <a href="dangnhap.jsp">Đăng nhập ngay</a>
-            </div>
         </div>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
@@ -187,7 +210,7 @@
 
                         setTimeout(() => {
                             window.location.href = targetUrl;
-                        }, 350); 
+                        }, 350);
                     });
                 });
             });
