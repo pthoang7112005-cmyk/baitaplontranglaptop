@@ -27,16 +27,17 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                /* Thêm thuộc tính giúp hiển thị ảnh sắc nét hơn khi bị phóng to */
-                image-rendering: -webkit-optimize-contrast;
-                image-rendering: crisp-edges;
+                background-color: rgba(0, 0, 0, 0.2);
+                background-blend-mode: darken;
             }
             .login-container {
-                background-color: rgba(255, 255, 255, 0.9);
+                background: rgba(255, 255, 255, 0.85);
                 padding: 40px;
                 border-radius: 12px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-                width: 380px;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+                width: 100%;
+                max-width: 380px;
+                backdrop-filter: blur(10px);
             }
             .login-container h1 {
                 margin-bottom: 30px;
@@ -116,6 +117,38 @@
                 color: #0056b3;
                 text-decoration: underline;
             }
+
+            /* Hiệu ứng chuyển trang */
+            .page-enter {
+                animation: fadeInSlideUp 0.5s ease-out forwards;
+                opacity: 0; /* Bắt đầu ẩn */
+            }
+
+            .page-exit {
+                animation: fadeOutSlideDown 0.4s ease-in forwards;
+            }
+
+            @keyframes fadeInSlideUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px) scale(0.98);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                }
+            }
+
+            @keyframes fadeOutSlideDown {
+                from {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                }
+                to {
+                    opacity: 0;
+                    transform: translateY(-30px) scale(0.98);
+                }
+            }
         </style>
     </head>
     <body>
@@ -149,5 +182,41 @@
             </form>
         </div>
 
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const container = document.querySelector('.login-container');
+                if (container) {
+                    container.classList.add('page-enter');
+                }
+
+                const links = document.querySelectorAll('a[href="dangky.jsp"]');
+                links.forEach(link => {
+                    link.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const targetUrl = this.href;
+
+                        if (container) {
+                            container.classList.remove('page-enter');
+                            container.classList.add('page-exit');
+                        }
+
+                        setTimeout(() => {
+                            window.location.href = targetUrl;
+                        }, 350); 
+                    });
+                });
+            });
+
+            // Xử lý lỗi khi người dùng ấn nút Back của trình duyệt (bfcache)
+            window.addEventListener('pageshow', function (event) {
+                if (event.persisted) {
+                    const container = document.querySelector('.login-container');
+                    if (container) {
+                        container.classList.remove('page-exit');
+                        container.classList.add('page-enter');
+                    }
+                }
+            });
+        </script>
     </body>
 </html>
