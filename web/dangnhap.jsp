@@ -118,10 +118,10 @@
                 text-decoration: underline;
             }
 
-            /* Hiệu ứng chuyển trang */
+            
             .page-enter {
                 animation: fadeInSlideUp 0.5s ease-out forwards;
-                opacity: 0; /* Bắt đầu ẩn */
+                opacity: 0; 
             }
 
             .page-exit {
@@ -218,7 +218,7 @@
                 });
             });
 
-            // Xử lý lỗi khi người dùng ấn nút Back của trình duyệt (bfcache)
+           
             window.addEventListener('pageshow', function (event) {
                 if (event.persisted) {
                     const container = document.querySelector('.login-container');

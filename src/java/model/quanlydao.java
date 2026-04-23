@@ -14,36 +14,34 @@ import java.util.List;
  *
  * @author LENOVO
  */
-public class dangnhapdao {
-
+public class quanlydao {
     Connection connect = null;
     PreparedStatement ps = null;
 
-    public user checkLogin(String username, String password) {
+    public List<user> GetALL() {
+        List<user> dsUser = new ArrayList<>();
         try {
             if (connect == null || connect.isClosed()) {
                 connect = new connectusear().connect();
             }
-            String sql = "SELECT * FROM user WHERE username = ? AND password = ?";
+            String sql = "SELECT * FROM user";
             ps = connect.prepareStatement(sql);
-            ps.setString(1, username);
-            ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                user xm = new user();
-               
-                xm.setId(rs.getInt("user_id")); 
-                xm.setUsername(rs.getString("username"));
-                xm.setPassword(rs.getString("password"));
-                xm.setRole(rs.getInt("role"));
-                xm.setEmail(rs.getString("email"));
-                xm.setFullnameString(rs.getString("full_name")); 
-                return xm;
+            while (rs.next()) {
+                user u = new user();
+                u.setId(rs.getInt("user_id"));
+                u.setUsername(rs.getString("username"));
+                u.setPassword(rs.getString("password"));
+                u.setEmail(rs.getString("email"));
+                u.setFullnameString(rs.getString("full_name"));
+                u.setRole(rs.getInt("role"));
+                dsUser.add(u);
             }
+            return dsUser;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
-
+    
 }

@@ -20,14 +20,14 @@ public class dangkydao {
             if (connect == null || connect.isClosed()) {
                 connect = new connectusear().connect();
             }
-            // role mặc định khi đăng ký là 1 (hoặc theo quy ước dự án của bạn), id tự tăng không cần truyền
+            
             String sql = "INSERT INTO user (username, password, email, full_name, role) VALUES (?, ?, ?, ?, ?)";
             ps = connect.prepareStatement(sql);
             ps.setString(1, u.getUsername());
             ps.setString(2, u.getPassword());
             ps.setString(3, u.getEmail());
             ps.setString(4, u.getFullnameString());
-            ps.setInt(5, u.getRole() == 0 ? 1 : u.getRole()); // Mặc định role là 1 nếu chưa được set
+            ps.setInt(5, u.getRole() == 0 ? 1 : u.getRole()); 
             int row = ps.executeUpdate();
             return row > 0;
         } catch (Exception e) {

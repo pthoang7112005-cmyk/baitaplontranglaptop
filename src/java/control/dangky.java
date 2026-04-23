@@ -90,16 +90,16 @@ public class dangky extends HttpServlet {
             model.dangkydao dao = new model.dangkydao();
             boolean isSuccess = dao.Add(u);
             if (isSuccess) {
-                // THÔNG BÁO THÀNH CÔNG: Lưu vào session để khi redirect sang trang login vẫn còn
+                
                 request.getSession().setAttribute("message", "Đăng ký tài khoản thành công! Mời bạn đăng nhập.");
                 response.sendRedirect("dangnhap.jsp");
             } else {
-                // THÔNG BÁO THẤT BẠI: Lỗi database chẳng hạn (ví dụ: trùng username)
+               
                 request.setAttribute("error", "Đăng ký thất bại! Tên đăng nhập đã tồn tại hoặc có lỗi xảy ra.");
                 request.getRequestDispatcher("dangky.jsp").forward(request, response);
             }
         } else {
-            // Mật khẩu không khớp
+            
             request.setAttribute("error", "Mật khẩu và Nhập lại mật khẩu không khớp!");
             request.getRequestDispatcher("dangky.jsp").forward(request, response);
         }

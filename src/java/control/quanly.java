@@ -12,15 +12,15 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
-import model.dangnhapdao;
+import model.quanlydao;
 import model.user;
 
 /**
  *
  * @author LENOVO
  */
-@WebServlet(name = "dangnhap", urlPatterns = {"/dangnhap"})
-public class dangnhap extends HttpServlet {
+@WebServlet(name = "quanly", urlPatterns = {"/quanly"})
+public class quanly extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +39,10 @@ public class dangnhap extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet dangnhap</title>");
+            out.println("<title>Servlet quanly</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet dangnhap at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet quanly at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -60,54 +60,16 @@ public class dangnhap extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        quanlydao dao = new quanlydao();
+        List<user> ds = dao.GetALL();
+        request.setAttribute("ds", ds);
+        request.getRequestDispatcher("quanly.jsp").forward(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        
-        String u = request.getParameter("username");
-        String p = request.getParameter("password");
-        
-        
-        dangnhapdao dao = new dangnhapdao();
-        
-        
-        user loggedInUser = dao.checkLogin(u, p);
-        
-        if (loggedInUser != null) {
-            
-            int role = loggedInUser.getRole();
-            
-           
-            request.getSession().setAttribute("user", loggedInUser);
-            
-            
-            if (role == 0) {
-                
-                response.sendRedirect("quanly"); 
-            } else if (role == 1) {
-                
-                response.sendRedirect("sanpham.jsp");
-            } else {
-               
-                response.sendRedirect("index.jsp");
-            }
-        } else {
-            
-            request.setAttribute("error", "Sai tên đăng nhập hoặc mật khẩu!");
-            request.getRequestDispatcher("dangnhap.jsp").forward(request, response);
-        }
+        processRequest(request, response);
     }
 
     /**
