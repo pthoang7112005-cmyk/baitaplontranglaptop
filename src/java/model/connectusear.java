@@ -12,13 +12,14 @@ import java.sql.DriverManager;
  * @author LENOVO
  */
 public class connectusear {
-     public Connection connect()
+    public Connection connect()
     {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             String sql="jdbc:mysql://localhost:3306/trangbanlaptoplon";
             return DriverManager.getConnection(sql,"root","");
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }

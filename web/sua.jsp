@@ -8,246 +8,252 @@
 <%@page import="model.user"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="vi">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Sửa người dùng</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sửa Người Dùng</title>
+        <!-- Bootstrap 5 CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style>
-            * {
-                box-sizing: border-box;
-                margin: 0;
-                padding: 0;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            }
             body {
-                background-color: #f4f7f6;
+                /* Gradient Pink & Blue background */
+                background: linear-gradient(135deg, #ff7eb3 0%, #4facfe 100%);
+                min-height: 100vh;
                 display: flex;
-                height: 100vh;
-                overflow: hidden;
-            }
-            .app-container {
-                display: flex;
-                width: 100%;
-                height: 100%;
-            }
-            /* Sidebar đồng bộ với quanly.jsp */
-            .admin-panel {
-                width: 250px;
-                background-color: #212529;
-                color: white;
-                display: flex;
-                flex-direction: column;
-                height: 100%;
-            }
-            .admin-panel h2 {
-                padding: 20px;
-                font-size: 22px;
-                font-weight: 600;
-                margin-bottom: 10px;
-                text-align: center;
-                border-bottom: 1px solid #343a40;
-            }
-            .admin-panel a {
-                color: #ffffff;
-                text-decoration: none;
-                padding: 15px 20px;
-                display: block;
-                font-size: 15px;
-                transition: 0.3s;
-            }
-            .admin-panel a:hover, .admin-panel a.active {
-                background-color: #343a40;
-                border-left: 4px solid #0d6efd;
-            }
-            
-            /* Main Content */
-            .main-content {
-                flex: 1;
-                background-image: url('img/1354206.jpeg');
-                background-size: cover;
-                background-position: center;
-                background-repeat: no-repeat;
-                padding: 40px;
-                overflow-y: auto;
-                display: flex;
+                align-items: center;
                 justify-content: center;
-                align-items: flex-start;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                margin: 0;
             }
-
-            /* Form Card */
             .form-card {
-                background-color: rgba(255, 255, 255, 0.95);
-                border-radius: 10px;
-                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+                background: #ffffff;
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
                 width: 100%;
-                max-width: 600px;
-                padding: 35px 40px;
-                margin-top: 20px;
+                max-width: 450px;
+                overflow: hidden;
             }
             .form-header {
                 text-align: center;
-                margin-bottom: 30px;
+                padding: 30px 20px 20px;
             }
-            .form-header h1 {
-                font-size: 28px;
-                color: #212529;
-                font-weight: 600;
+            .form-header h2 {
+                font-weight: 700;
+                /* Gradient text pink to blue */
+                background: linear-gradient(to right, #e83e8c, #0d6efd);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 5px;
             }
             .form-header p {
                 color: #6c757d;
-                font-size: 15px;
-                margin-top: 5px;
+                font-size: 0.95rem;
+                margin-bottom: 0;
             }
-
-            .form-group {
-                margin-bottom: 20px;
-            }
-            .form-group label {
-                display: block;
-                font-weight: 600;
-                margin-bottom: 8px;
-                color: #495057;
-                font-size: 14px;
+            .form-body {
+                padding: 0 30px 30px;
             }
             .form-control {
-                width: 100%;
+                border-radius: 8px;
                 padding: 12px 15px;
-                font-size: 15px;
                 border: 1px solid #ced4da;
-                border-radius: 6px;
-                transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+                font-size: 0.95rem;
             }
             .form-control:focus {
-                border-color: #86b7fe;
-                outline: 0;
+                border-color: #0d6efd;
                 box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
             }
-            .form-control:disabled, .form-control[readonly] {
-                background-color: #e9ecef;
-                color: #6c757d;
+            .form-control[readonly] {
+                background-color: #f8f9fa;
                 cursor: not-allowed;
             }
-
-            .btn-container {
-                display: flex;
-                justify-content: space-between;
-                margin-top: 30px;
-                gap: 15px;
+            .form-select {
+                border-radius: 8px;
+                padding: 12px 15px;
+                border: 1px solid #ced4da;
+                font-size: 0.95rem;
             }
-            .btn {
-                padding: 12px 20px;
-                font-size: 16px;
+            .form-select:focus {
+                border-color: #0d6efd;
+                box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+            }
+            .form-label {
                 font-weight: 600;
-                border-radius: 6px;
+                color: #495057;
+                font-size: 0.9rem;
+                margin-bottom: 6px;
+            }
+            .btn-submit {
+                background: linear-gradient(to right, #0d6efd, #e83e8c);
                 border: none;
-                cursor: pointer;
-                transition: 0.3s;
-                text-align: center;
-                text-decoration: none;
-                flex: 1;
+                border-radius: 8px;
+                padding: 14px;
+                font-weight: 700;
+                font-size: 1rem;
+                width: 100%;
+                color: white;
+                transition: all 0.3s ease;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
             }
-            .btn-save {
-                background-color: #0d6efd;
+            .btn-submit:hover {
+                background: linear-gradient(to right, #0b5ed7, #d63384);
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
                 color: white;
             }
-            .btn-save:hover {
-                background-color: #0b5ed7;
+            .btn-submit:active {
+                transform: scale(0.98);
             }
-            .btn-cancel {
+            .btn-back {
                 background-color: #6c757d;
+                border: none;
+                border-radius: 8px;
+                padding: 14px;
+                font-weight: 700;
+                font-size: 1rem;
+                width: 100%;
+                color: white;
+                transition: all 0.3s ease;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                text-decoration: none;
+                display: inline-block;
+                text-align: center;
+                margin-top: 10px;
+            }
+            .btn-back:hover {
+                background-color: #5c636a;
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
                 color: white;
             }
-            .btn-cancel:hover {
-                background-color: #5c636a;
+            .alert {
+                border-radius: 8px;
+                font-size: 0.9rem;
+            }
+            /* Animations */
+            .page-enter {
+                animation: fadeInSlideUp 0.5s ease-out forwards;
+                opacity: 0;
+            }
+            @keyframes fadeInSlideUp {
+                from { opacity: 0; transform: translateY(30px) scale(0.98); }
+                to { opacity: 1; transform: translateY(0) scale(1); }
             }
         </style>
     </head>
     <body>
-        <div class="app-container">
-            <div class="admin-panel">
-                <h2>Admin Panel</h2>
-                <a href="quanly" class="active">Quản lý người dùng</a>
-                <a href="quanlysanpham">Quản lý sản phẩm</a>
-                <a href="quanlydonhang">Quản lý đơn hàng</a>
+        <div class="form-card page-enter">
+            <div class="form-header">
+                <h2><i class="fas fa-user-edit me-2"></i>Sửa Người Dùng</h2>
+                <p>Cập nhật thông tin chi tiết</p>
             </div>
             
-            <div class="main-content">
-                <div class="form-card">
-                    <div class="form-header">
-                        <h1>Sửa Người Dùng</h1>
-                        <p>Cập nhật thông tin chi tiết của người dùng</p>
-                    </div>
+            <div class="form-body">
+                <%
+                    // Lấy ID từ tham số URL
+                    String id = request.getParameter("id");
+                    String username = "";
+                    String password = "";
+                    String email = "";
+                    String fullname = "";
+                    int role = 1;
 
-                    <%
-                        // Lấy ID từ tham số URL
-                        String id = request.getParameter("id");
-                        String username = "";
-                        String password = "";
-                        String email = "";
-                        String fullname = "";
-                        int role = 1;
-
-                        // Lấy dữ liệu user trực tiếp từ suadao để đảm bảo luôn có dữ liệu khi gọi từ quanly.jsp
-                        if (id != null && !id.trim().isEmpty()) {
-                            model.suadao dao = new model.suadao();
-                            List<user> list = dao.GetALL();
-                            if (list != null) {
-                                for (user u : list) {
-                                    if (String.valueOf(u.getId()).equals(id)) {
-                                        username = u.getUsername() != null ? u.getUsername() : "";
-                                        password = u.getPassword() != null ? u.getPassword() : "";
-                                        email = u.getEmail() != null ? u.getEmail() : "";
-                                        fullname = u.getFullnameString() != null ? u.getFullnameString() : "";
-                                        role = u.getRole();
-                                        break;
-                                    }
+                    // Lấy dữ liệu user từ suadao
+                    if (id != null && !id.trim().isEmpty()) {
+                        model.suadao dao = new model.suadao();
+                        List<user> list = dao.GetALL();
+                        if (list != null) {
+                            for (user u : list) {
+                                if (String.valueOf(u.getId()).equals(id)) {
+                                    username = u.getUsername() != null ? u.getUsername() : "";
+                                    password = u.getPassword() != null ? u.getPassword() : "";
+                                    email = u.getEmail() != null ? u.getEmail() : "";
+                                    fullname = u.getFullnameString() != null ? u.getFullnameString() : "";
+                                    role = u.getRole();
+                                    break;
                                 }
                             }
                         }
-                    %>
+                    }
+                %>
 
-                    <form action="sua" method="POST">
-                        <div class="form-group">
-                            <label for="id">ID Người Dùng</label>
-                            <input type="text" id="id" name="id" class="form-control" value="<%= (id != null) ? id : "" %>" readonly>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="username">Tên Đăng Nhập</label>
-                            <input type="text" id="username" name="username" class="form-control" value="<%= username %>" required placeholder="Nhập tên đăng nhập...">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="password">Mật Khẩu</label>
-                            <input type="text" id="password" name="password" class="form-control" value="<%= password %>" required placeholder="Nhập mật khẩu...">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" name="email" class="form-control" value="<%= email %>" required placeholder="Nhập địa chỉ email...">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="fullname">Họ và Tên</label>
-                            <input type="text" id="fullname" name="fullname" class="form-control" value="<%= fullname %>" required placeholder="Nhập họ và tên...">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="role">Vai Trò</label>
-                            <select id="role" name="role" class="form-control">
-                                <option value="0" <%= (role == 0) ? "selected" : "" %>>Admin</option>
-                                <option value="1" <%= (role == 1) ? "selected" : "" %>>User</option>
-                            </select>
-                        </div>
+                <% 
+                    String error = (String) request.getAttribute("error");
+                    if(error != null) {
+                %>
+                    <div class="alert alert-danger py-2 text-center" role="alert">
+                        <i class="fas fa-exclamation-circle me-1"></i> <%= error %>
+                    </div>
+                <% } %>
+                
+                <% 
+                    String successMsg = (String) session.getAttribute("message");
+                    if(successMsg != null) {
+                %>
+                    <div class="alert alert-success py-2 text-center" role="alert">
+                        <i class="fas fa-check-circle me-1"></i> <%= successMsg %>
+                    </div>
+                <% 
+                        session.removeAttribute("message");
+                    } 
+                %>
 
-                        <div class="btn-container">
-                            <a href="quanly" class="btn btn-cancel">Hủy Bỏ</a>
-                            
-                           <button type="submit" class="btn btn-save">Lưu Thay Đổi</button>
-                        </div>
-                    </form>
-                </div>
+                <form action="sua" method="POST">
+                    <div class="mb-3">
+                        <label for="id" class="form-label"><i class="fas fa-id-badge me-2 text-primary"></i>ID Người Dùng</label>
+                        <input type="text" id="id" name="id" class="form-control" value="<%= (id != null) ? id : "" %>" readonly>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="username" class="form-label"><i class="fas fa-user me-2 text-primary"></i>Tên Đăng Nhập</label>
+                        <input type="text" id="username" name="username" class="form-control" value="<%= username %>" required placeholder="Nhập tên đăng nhập...">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="password" class="form-label"><i class="fas fa-lock me-2 text-primary"></i>Mật Khẩu</label>
+                        <input type="text" id="password" name="password" class="form-control" value="<%= password %>" required placeholder="Nhập mật khẩu...">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="email" class="form-label"><i class="fas fa-envelope me-2 text-primary"></i>Email</label>
+                        <input type="email" id="email" name="email" class="form-control" value="<%= email %>" required placeholder="Nhập địa chỉ email...">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="fullname" class="form-label"><i class="fas fa-id-card me-2 text-primary"></i>Họ và Tên</label>
+                        <input type="text" id="fullname" name="fullname" class="form-control" value="<%= fullname %>" required placeholder="Nhập họ và tên...">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="role" class="form-label"><i class="fas fa-user-tag me-2 text-primary"></i>Vai Trò</label>
+                        <select id="role" name="role" class="form-select">
+                            <option value="0" <%= (role == 0) ? "selected" : "" %>>Admin</option>
+                            <option value="1" <%= (role == 1) ? "selected" : "" %>>User</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-save me-2"></i>Lưu Thay Đổi
+                    </button>
+                </form>
+
+                <a href="quanly" class="btn-back">
+                    <i class="fas fa-arrow-left me-2"></i>Quay Lại
+                </a>
             </div>
+        </div>
+
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         </div>
     </body>
 </html>

@@ -11,7 +11,12 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Quản lý người dùng</title>
+        <!-- Bootstrap 5 CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style>
             * {
                 box-sizing: border-box;
@@ -20,7 +25,7 @@
                 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             }
             body {
-                background-color: #ffffff;
+                background: linear-gradient(135deg, #ff7eb3 0%, #4facfe 100%);
                 display: flex;
                 height: 100vh;
                 overflow: hidden;
@@ -29,38 +34,49 @@
                 display: flex;
                 width: 100%;
                 height: 100%;
+                padding: 20px;
+                gap: 20px;
             }
             .admin-panel {
                 width: 250px;
-                background-color: #212529;
-                color: white;
+                background-color: #ffffff;
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
                 display: flex;
                 flex-direction: column;
                 height: 100%;
+                overflow: hidden;
             }
             .admin-panel h2 {
                 padding: 20px;
                 font-size: 22px;
-                font-weight: 600;
+                font-weight: 700;
                 margin-bottom: 10px;
+                background: linear-gradient(to right, #e83e8c, #0d6efd);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                text-align: center;
             }
             .admin-panel a {
-                color: #ffffff;
+                color: #495057;
                 text-decoration: none;
                 padding: 15px 20px;
                 display: block;
                 font-size: 15px;
-                transition: 0.3s;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                border-left: 4px solid transparent;
             }
             .admin-panel a:hover, .admin-panel a.active {
-                background-color: #343a40;
+                background-color: #f8f9fa;
+                color: #0d6efd;
+                border-left-color: #e83e8c;
             }
             .main-content {
                 flex: 1;
-                background-image: url('img/1354206.jpeg');
-                background-size: cover;
-                background-position: center;
-                background-repeat: no-repeat;
+                background-color: #ffffff;
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
                 padding: 30px;
                 overflow-y: auto;
             }
@@ -68,117 +84,152 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                margin-bottom: 20px;
+                margin-bottom: 25px;
+                padding-bottom: 15px;
+                border-bottom: 1px solid #dee2e6;
             }
             .header-top h1 {
                 font-size: 24px;
-                color: #212529;
-                font-weight: 500;
+                font-weight: 700;
+                background: linear-gradient(to right, #e83e8c, #0d6efd);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 0;
             }
             .user-info {
                 display: flex;
                 align-items: center;
-                gap: 10px;
+                gap: 15px;
                 font-size: 15px;
-                color: #ffffff;
+                color: #495057;
                 font-weight: 600;
             }
             .user-info a {
-                color: #dc3545;
+                color: #e83e8c;
                 text-decoration: none;
-                font-weight: normal;
+                font-weight: 600;
                 font-size: 14px;
+                transition: color 0.3s;
             }
             .user-info a:hover {
                 text-decoration: underline;
+                color: #d63384;
             }
             
             .btn-add {
                 display: inline-block;
-                padding: 10px 16px;
-                background-color: #0d6efd;
+                padding: 12px 20px;
+                background: linear-gradient(to right, #0d6efd, #e83e8c);
                 color: white;
                 text-decoration: none;
-                border-radius: 4px;
+                border-radius: 8px;
                 margin-bottom: 20px;
                 font-size: 14px;
+                font-weight: 700;
                 border: none;
                 cursor: pointer;
+                transition: all 0.3s ease;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
             }
             .btn-add:hover {
-                background-color: #0b5ed7;
+                background: linear-gradient(to right, #0b5ed7, #d63384);
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                color: white;
             }
 
             table {
                 width: 100%;
-                border-collapse: collapse;
+                border-collapse: separate;
+                border-spacing: 0;
                 background-color: white;
-            }
-            th, td {
-                padding: 12px 15px;
-                text-align: left;
+                border-radius: 8px;
+                overflow: hidden;
                 border: 1px solid #dee2e6;
             }
-            th {
-                background-color: #212529;
-                color: white;
-                font-weight: 600;
-                font-size: 14px;
+            th, td {
+                padding: 15px;
+                text-align: left;
+                border-bottom: 1px solid #dee2e6;
             }
-            tr:nth-child(even) {
-                background-color: #f8f9fa;
+            th {
+                background: #f8f9fa;
+                color: #495057;
+                font-weight: 700;
+                font-size: 14px;
+                text-transform: uppercase;
+            }
+            tr:last-child td {
+                border-bottom: none;
             }
             tr:hover {
                 background-color: #f1f3f5;
             }
             .btn-edit {
                 display: inline-block;
-                padding: 6px 12px;
-                background-color: #ffc107;
-                color: #000;
+                padding: 8px 15px;
+                background-color: #4facfe;
+                color: #fff;
                 text-decoration: none;
-                border-radius: 4px;
-                font-size: 14px;
+                border-radius: 6px;
+                font-size: 13px;
+                font-weight: 600;
                 margin-right: 5px;
                 border: none;
+                transition: all 0.3s ease;
             }
             .btn-edit:hover {
-                background-color: #e0a800;
+                background-color: #00f2fe;
+                color: #fff;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             }
             .btn-delete {
                 display: inline-block;
-                padding: 6px 12px;
-                background-color: #dc3545;
+                padding: 8px 15px;
+                background-color: #e83e8c;
                 color: white;
                 text-decoration: none;
-                border-radius: 4px;
-                font-size: 14px;
+                border-radius: 6px;
+                font-size: 13px;
+                font-weight: 600;
                 border: none;
+                transition: all 0.3s ease;
             }
             .btn-delete:hover {
-                background-color: #c82333;
+                background-color: #d63384;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+            /* Animations */
+            .page-enter {
+                animation: fadeInSlideUp 0.5s ease-out forwards;
+                opacity: 0;
+            }
+            @keyframes fadeInSlideUp {
+                from { opacity: 0; transform: translateY(30px) scale(0.98); }
+                to { opacity: 1; transform: translateY(0) scale(1); }
             }
         </style>
     </head>
     <body>
-        <div class="app-container">
+        <div class="app-container page-enter">
             <div class="admin-panel">
-                <h2>Admin Panel</h2>
-                <a href="quanly" class="active">Quản lý người dùng</a>
-                <a href="quanlysanpham">Quản lý sản phẩm</a>
-                <a href="quanlydonhang">Quản lý đơn hàng</a>
+                <h2><i class="fas fa-user-shield me-2"></i>Admin</h2>
+                <a href="quanly" class="active"><i class="fas fa-users me-2"></i>Quản lý người dùng</a>
+                <a href="quanlysanpham"><i class="fas fa-box-open me-2"></i>Quản lý sản phẩm</a>
+                <a href="quanlydonhang"><i class="fas fa-shopping-cart me-2"></i>Quản lý đơn hàng</a>
             </div>
             
             <div class="main-content">
                 <div class="header-top">
-                    <h1>Danh sách người dùng</h1>
+                    <h1><i class="fas fa-list-alt me-2"></i>Danh sách người dùng</h1>
                     <div class="user-info">
-                        <span>👤 admin01 ▾</span>
-                        <a href="dangnhap.jsp" style="margin-left: 15px;">Đăng xuất</a>
+                        <span><i class="fas fa-user-circle fs-5 me-1"></i> admin01 ▾</span>
+                        <a href="dangnhap.jsp" style="margin-left: 15px;"><i class="fas fa-sign-out-alt me-1"></i>Đăng xuất</a>
                     </div>
                 </div>
 
-                <a href="#" class="btn-add">+ Thêm mới người dùng</a>
+                <a href="#" class="btn-add"><i class="fas fa-plus me-1"></i> Thêm mới người dùng</a>
 
                 <table>
                     <thead>
@@ -212,8 +263,8 @@
                                 <% }%>
                             </td>
                             <td>
-                                <a href="sua.jsp?id=<%=dsxm.getId()%>" class="btn-edit">Sửa</a>
-                                <a href="#" class="btn-delete" onclick="return confirm('Bạn có chắc chắn muốn xóa user này không?');">Xóa</a>
+                                <a href="sua.jsp?id=<%=dsxm.getId()%>" class="btn-edit"><i class="fas fa-edit"></i> Sửa</a>
+                                <a href="#" class="btn-delete" onclick="return confirm('Bạn có chắc chắn muốn xóa user này không?');"><i class="fas fa-trash-alt"></i> Xóa</a>
                             </td>
                         </tr>
                         <%
@@ -230,5 +281,7 @@
                 </table>
             </div>
         </div>
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
