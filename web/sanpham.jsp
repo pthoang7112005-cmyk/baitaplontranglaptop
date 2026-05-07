@@ -276,43 +276,42 @@
                 let index = 0;
 
                 setInterval(() => {
-                    // Bỏ qua hiệu ứng nếu người dùng đang click vào ô tìm kiếm hoặc đã nhập chữ
+                    
                     if(document.activeElement === searchInput || searchInput.value.length > 0) return;
 
-                    // Bước 1: Trượt chữ hiện tại lên và mờ đi
+                    
                     placeholderSpan.style.transform = 'translateY(-100%)';
                     placeholderSpan.style.opacity = '0';
 
                     setTimeout(() => {
-                        // Bước 2: Đổi từ khóa và đưa vị trí text xuống dưới cùng (ẩn)
+                        
                         index = (index + 1) % placeholders.length;
                         placeholderSpan.textContent = placeholders[index];
                         placeholderSpan.style.transition = 'none';
                         placeholderSpan.style.transform = 'translateY(100%)';
                         
-                        // Bắt buộc trình duyệt tính toán lại giao diện trước khi thêm hiệu ứng tiếp theo
+                        
                         void placeholderSpan.offsetWidth;
 
                         // Bước 3: Trượt chữ mới vào giữa
                         placeholderSpan.style.transition = 'transform 0.4s ease, opacity 0.4s ease';
                         placeholderSpan.style.transform = 'translateY(0)';
                         placeholderSpan.style.opacity = '1';
-                    }, 400); // Đợi thời gian trượt xong (khớp với thời gian transition CSS) mới đổi chữ
-                }, 2500); // Thay đổi từ khóa mỗi 2.5 giây
+                    }, 400); 
+                }, 2500); 
 
-                // Ẩn lớp giả placeholder ngay khi click vào ô tìm kiếm
+                
                 searchInput.addEventListener('focus', () => {
                     placeholderContainer.style.display = 'none';
                 });
 
-                // Hiện lại lớp giả nếu người dùng click ra ngoài mà không nhập gì
+                
                 searchInput.addEventListener('blur', () => {
                     if (searchInput.value.length === 0) {
                         placeholderContainer.style.display = 'flex';
                     }
                 });
 
-                // Đề phòng trường hợp nhập liệu tự động (autocomplete)
                 searchInput.addEventListener('input', () => {
                     if (searchInput.value.length > 0) {
                         placeholderContainer.style.display = 'none';
