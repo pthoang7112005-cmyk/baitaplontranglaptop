@@ -6,6 +6,8 @@
 
 <%@page import="model.product"%>
 <%@page import="java.util.List"%>
+<%@page import="java.text.NumberFormat"%>
+<%@page import="java.util.Locale"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="vi">
@@ -157,7 +159,7 @@
                 border-radius: 12px;
                 z-index: 2;
             }
-            
+
             /* CSS cho hiệu ứng placeholder trượt của ô tìm kiếm */
             .dynamic-placeholder {
                 position: absolute;
@@ -174,6 +176,51 @@
                 transition: transform 0.4s ease, opacity 0.4s ease;
                 display: block;
             }
+            .suggestion-box {
+                position: absolute;
+                top: calc(100% + 5px);
+                left: 0;
+                right: 0;
+                width: 100%;
+                box-sizing: border-box;
+                background: white;
+                border: 1px solid #ddd;
+                border-top: none;
+                border-radius: 0 0 8px 8px;
+                z-index: 1000;
+                max-height: 350px;
+                overflow-y: auto;
+                box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+                display: none;
+            }
+            .suggestion-item {
+                display: block;
+                padding: 10px 12px;
+                cursor: pointer;
+                border-bottom: 1px solid #f0f0f0;
+                text-decoration: none;
+                color: #333;
+            }
+            .suggestion-item:hover {
+                background: #f8f9ff;
+            }
+            .suggestion-item img {
+                width: 45px;
+                height: 45px;
+                object-fit: contain;
+                margin-right: 10px;
+                border-radius: 4px;
+            }
+            .suggestion-item .sug-name {
+                font-size: 13px;
+                font-weight: 600;
+                flex: 1;
+            }
+            .suggestion-item .sug-price {
+                font-size: 13px;
+                color: #d70018;
+                font-weight: 700;
+            }
         </style>
     </head>
     <body>
@@ -184,18 +231,27 @@
                 <a href="sanpham" class="text-decoration-none me-3">
                     <h2 class="mb-0 page-title"><i class="fas fa-laptop-code me-2"></i>LapTopFake</h2>
                 </a>
-                
                 <!-- Thanh tìm kiếm nằm giữa -->
-                <form class="d-flex flex-grow-1 px-md-4 my-3 my-md-0" role="search" style="max-width: 500px;">
-                    <div class="input-group shadow-sm" style="border-radius: 8px; overflow: hidden; position: relative; background-color: #fff;">
+                <form action="sanpham" method="GET" class="d-flex flex-grow-1 px-md-4 my-3 my-md-0" role="search" style="max-width: 500px;">
+                    <div class="input-group shadow-sm" style="border-radius: 8px; overflow: visible; position: relative; background-color: #fff;">
                         <div id="dynamicPlaceholder" class="dynamic-placeholder">
                             <span>Tìm MacBook Pro...</span>
                         </div>
-                        <input id="dynamicSearchInput" class="form-control border-0" type="search" aria-label="Search" style="box-shadow: none; padding-left: 15px; background: transparent; z-index: 2;" />
-                        <button class="btn-search rounded-0" type="submit" style="z-index: 4;"><i class="fas fa-search"></i></button>
+                        <input 
+                            name="tukhoa" 
+                            id="dynamicSearchInput" 
+                            class="form-control border-0" 
+                            type="search" 
+                            value="<%= request.getParameter("tukhoa") != null ? request.getParameter("tukhoa") : ""%>"
+                            aria-label="Search" 
+                            style="box-shadow: none; padding-left: 15px; background: transparent; z-index: 2;" 
+                            />
+                        <button class="btn-search rounded-0" type="submit" style="z-index: 4;">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        <div id="suggestionBox" class="suggestion-box"></div>
                     </div>
-                </form>
-                
+                </form> 
                 <!-- Giỏ hàng & Tài khoản -->
                 <div class="d-flex align-items-center gap-3">
                     <a href="#" class="text-decoration-none text-dark d-flex align-items-center fw-semibold">
@@ -223,45 +279,53 @@
             <div class="row g-3">
                 <%
                     List<product> list = (List<product>) request.getAttribute("ds");
-                    if (list != null && !list.isEmpty()) {
-                        for (product a : list) {
+                    if (list == null || list.isEmpty()) {
                 %>
-                <a href="chitiet?id=<%= a.getId() %>" class="text-decoration-none text-dark d-flex flex-column" style="flex-grow: 1;">
-                <div class="col-6 col-md-4 col-lg-3 d-flex align-items-stretch">
-                    <div class="card w-100 shadow-sm product-card position-relative">
-                        <span class="discount-badge">-10%</span>
-                        <div class="p-3 pb-0 text-center">
-                            <img src="<%= a.getImageString() %>" class="card-img-top product-img" alt="<%= a.getNameString() %>">
-                        </div>
-                        <div class="card-body d-flex flex-column">
-                            <h6 class="product-name" title="<%= a.getNameString() %>"><%= a.getNameString() %></h6>
-                            <p class="product-price"><%= a.getMoney() %> ₫</p>
-                            <div class="product-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                                <span class="text-muted ms-1" style="font-size: 11px;">(42)</span>
-                            </div>
-                            <button class="btn btn-buy mt-auto"><i class="fas fa-cart-plus me-1"></i> Mua ngay</button>
-                        </div>
-                    </div>
+                <div class="col-12 text-center py-5">
+                    <i class="fas fa-search fa-3x mb-3" style="color: rgba(255,255,255,0.5);"></i>
+                    <p class="fs-5 text-white fw-semibold">Không tìm thấy sản phẩm phù hợp</p>
+                    <a href="sanpham" class="btn btn-light mt-2">Xem tất cả sản phẩm</a>
                 </div>
-                </a>
+                <%
+                } else {
+                    for (product a : list) {
+                %>
+                <%-- Card sản phẩm giữ nguyên như cũ --%>
+                <%-- ✅ Phải có đầy đủ code card như file gốc --%>
+                <div class="col-6 col-md-4 col-lg-3 d-flex align-items-stretch">
+                    <a href="chitiet?id=<%= a.getId()%>" class="text-decoration-none text-dark w-100">
+                        <div class="card w-100 shadow-sm product-card position-relative">
+                            <span class="discount-badge">-10%</span>
+                            <div class="p-3 pb-0 text-center">
+                                <img src="<%= a.getImageString()%>" class="card-img-top product-img" alt="<%= a.getNameString()%>">
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                                <h6 class="product-name"><%= a.getNameString()%></h6>
+                                <p class="product-price">
+                                    <%= NumberFormat.getNumberInstance(new Locale("vi", "VN")).format(a.getMoney())%> ₫
+                                </p>
+                                <div class="product-rating">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                    <span class="text-muted ms-1">(42)</span>
+                                </div>
+                                <button class="btn btn-buy mt-auto"><i class="fas fa-cart-plus me-1"></i> Mua ngay</button>
+                            </div>
+                        </div>
+                    </a>
+                </div>
                 <%
                         }
-                    } 
+                    }
                 %>
-                
-                
             </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        
+
         <!-- Script tạo hiệu ứng luân chuyển từ khóa trượt lên (giống Thế Giới Di Động) -->
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function () {
                 const placeholders = [
                     "Tìm MacBook Pro...",
                     "Tìm Dell XPS...",
@@ -269,43 +333,44 @@
                     "Tìm HP Envy...",
                     "Tìm Asus ROG..."
                 ];
-                
+
                 const placeholderSpan = document.querySelector('#dynamicPlaceholder span');
                 const placeholderContainer = document.getElementById('dynamicPlaceholder');
                 const searchInput = document.getElementById('dynamicSearchInput');
                 let index = 0;
 
                 setInterval(() => {
-                    
-                    if(document.activeElement === searchInput || searchInput.value.length > 0) return;
 
-                    
+                    if (document.activeElement === searchInput || searchInput.value.length > 0)
+                        return;
+
+
                     placeholderSpan.style.transform = 'translateY(-100%)';
                     placeholderSpan.style.opacity = '0';
 
                     setTimeout(() => {
-                        
+
                         index = (index + 1) % placeholders.length;
                         placeholderSpan.textContent = placeholders[index];
                         placeholderSpan.style.transition = 'none';
                         placeholderSpan.style.transform = 'translateY(100%)';
-                        
-                        
+
+
                         void placeholderSpan.offsetWidth;
 
                         // Bước 3: Trượt chữ mới vào giữa
                         placeholderSpan.style.transition = 'transform 0.4s ease, opacity 0.4s ease';
                         placeholderSpan.style.transform = 'translateY(0)';
                         placeholderSpan.style.opacity = '1';
-                    }, 400); 
-                }, 2500); 
+                    }, 400);
+                }, 2500);
 
-                
+
                 searchInput.addEventListener('focus', () => {
                     placeholderContainer.style.display = 'none';
                 });
 
-                
+
                 searchInput.addEventListener('blur', () => {
                     if (searchInput.value.length === 0) {
                         placeholderContainer.style.display = 'flex';
@@ -318,6 +383,65 @@
                     } else if (document.activeElement !== searchInput) {
                         placeholderContainer.style.display = 'flex';
                     }
+                });
+
+                // ===== AUTOCOMPLETE GỢI Ý =====
+                const suggestionBox = document.getElementById('suggestionBox');
+                let debounceTimer;
+
+                searchInput.addEventListener('input', function () {
+                    const keyword = this.value.trim();
+
+                    // Ẩn/hiện placeholder
+                    if (keyword.length > 0) {
+                        placeholderContainer.style.display = 'none';
+                    } else {
+                        suggestionBox.style.display = 'none';
+                        suggestionBox.innerHTML = '';
+                        return;
+                    }
+
+                    // Debounce: chờ 300ms sau khi ngừng gõ mới gọi API
+                    clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(() => {
+                        fetch('goiy?q=' + encodeURIComponent(keyword))
+                                .then(res => res.json())
+                                .then(data => {
+                                    suggestionBox.innerHTML = '';
+
+                                    if (data.length === 0) {
+                                        suggestionBox.style.display = 'none';
+                                        return;
+                                    }
+
+                                    data.forEach(item => {
+                                        const div = document.createElement('a');
+                                        div.href = 'sanpham?tukhoa=' + encodeURIComponent(item.name);
+                                        div.className = 'suggestion-item';
+                                        div.textContent = item.name;
+                                        div.addEventListener('click', () => {
+                                            searchInput.value = item.name;
+                                            suggestionBox.style.display = 'none';
+                                        });
+                                        suggestionBox.appendChild(div);
+                                    });
+
+                                    suggestionBox.style.display = 'block';
+                                })
+                                .catch(err => console.error('Lỗi gợi ý:', err));
+                    }, 300);
+                });
+
+                // Ẩn dropdown khi click ra ngoài
+                document.addEventListener('click', function (e) {
+                    if (!searchInput.contains(e.target) && !suggestionBox.contains(e.target)) {
+                        suggestionBox.style.display = 'none';
+                    }
+                });
+
+                // Ẩn dropdown khi submit form
+                searchInput.closest('form').addEventListener('submit', function () {
+                    suggestionBox.style.display = 'none';
                 });
             });
         </script>

@@ -15,15 +15,14 @@ import java.util.List;
 import model.product;
 import model.quanlydao;
 import model.sanphamdao;
-import model.timkiemdao;
 import model.user;
 
 /**
  *
  * @author LENOVO
  */
-@WebServlet(name = "sanpham", urlPatterns = {"/sanpham"})
-public class sanpham extends HttpServlet {
+@WebServlet(name = "chitiet", urlPatterns = {"/chitiet"})
+public class chitiet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,10 +41,10 @@ public class sanpham extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet sanpham</title>");
+            out.println("<title>Servlet chitiet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet sanpham at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet chitiet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -63,18 +62,18 @@ public class sanpham extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String tukhoa = request.getParameter("tukhoa");
-        List<product> ds;
-        if (tukhoa != null && !tukhoa.trim().isEmpty()) {
-            timkiemdao searchDao = new timkiemdao();
-            ds = timkiemdao.timKiem(tukhoa);
-            request.setAttribute("searchKeyword", tukhoa);
-        } else {
-            sanphamdao dao = new sanphamdao();
-            ds = dao.GetALL();
+        try {
+            String idParam = request.getParameter("id");
+            if (idParam != null && !idParam.isEmpty()) {
+                int id = Integer.parseInt(idParam);
+                sanphamdao dao = new sanphamdao();
+                product p = dao.GetById(id);
+                request.setAttribute("product", p);
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
         }
-        request.setAttribute("ds", ds);
-        request.getRequestDispatcher("sanpham.jsp").forward(request, response);
+        request.getRequestDispatcher("chitiet.jsp").forward(request, response);
     }
 
     /**

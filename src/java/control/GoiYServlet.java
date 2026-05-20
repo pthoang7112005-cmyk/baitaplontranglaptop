@@ -13,17 +13,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import model.product;
-import model.quanlydao;
-import model.sanphamdao;
 import model.timkiemdao;
-import model.user;
 
 /**
  *
  * @author LENOVO
  */
-@WebServlet(name = "sanpham", urlPatterns = {"/sanpham"})
-public class sanpham extends HttpServlet {
+@WebServlet(name = "GoiYServlet", urlPatterns = {"/goiy"})
+public class GoiYServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,10 +39,10 @@ public class sanpham extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet sanpham</title>");
+            out.println("<title>Servlet GoiYServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet sanpham at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet GoiYServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -63,18 +60,35 @@ public class sanpham extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String tukhoa = request.getParameter("tukhoa");
-        List<product> ds;
-        if (tukhoa != null && !tukhoa.trim().isEmpty()) {
-            timkiemdao searchDao = new timkiemdao();
-            ds = timkiemdao.timKiem(tukhoa);
-            request.setAttribute("searchKeyword", tukhoa);
-        } else {
-            sanphamdao dao = new sanphamdao();
-            ds = dao.GetALL();
+         response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
+        String tukhoa = request.getParameter("q");
+        PrintWriter out = response.getWriter();
+        
+        if (tukhoa == null || tukhoa.trim().isEmpty()) {
+            out.print("[]");
+            return;
         }
-        request.setAttribute("ds", ds);
-        request.getRequestDispatcher("sanpham.jsp").forward(request, response);
+        
+        List<product> list = timkiemdao.timKiem(tukhoa.trim());
+        
+        // Trả về JSON
+        StringBuilder json = new StringBuilder("[");
+        for (int i = 0; i < list.size(); i++) {
+            product p = list.get(i);
+            json.append("{")
+                .append("\"id\":").append(p.getId()).append(",")
+                .append("\"name\":\"").append(p.getNameString().replace("\"", "\\\"")).append("\",")
+                .append("\"image\":\"").append(p.getImageString()).append("\",")
+                .append("\"money\":").append(p.getMoney())
+                .append("}");
+            if (i < list.size() - 1) json.append(",");
+        }
+        json.append("]");
+        
+        out.print(json.toString());
+    
     }
 
     /**
