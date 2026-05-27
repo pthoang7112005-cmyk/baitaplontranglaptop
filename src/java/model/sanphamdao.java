@@ -45,7 +45,7 @@ public class sanphamdao {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return dsSanPham;
     }
 
     public product GetById(int id) {

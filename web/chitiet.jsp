@@ -208,9 +208,10 @@
                             <p class="text-muted" style="line-height: 1.6;">
                                 <%= p.getMotaString()%>
 
-                                <button class="btn btn-buy mt-4">
+                                <!-- ✅ Thay bằng cái này -->
+                                <a href="giohang?action=them&id=<%= p.getId()%>" class="btn btn-buy mt-4">
                                     <i class="fas fa-cart-plus me-2"></i>Thêm vào giỏ hàng
-                                </button>
+                                </a>
                         </div>
                     </div>
                 </div>

@@ -73,6 +73,9 @@ public class sanpham extends HttpServlet {
             sanphamdao dao = new sanphamdao();
             ds = dao.GetALL();
         }
+        if (ds == null) {
+        ds = new java.util.ArrayList<>();
+    }
         request.setAttribute("ds", ds);
         request.getRequestDispatcher("sanpham.jsp").forward(request, response);
          
