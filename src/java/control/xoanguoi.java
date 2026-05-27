@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
+
 package control;
 
 import java.io.IOException;
@@ -11,19 +8,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
-import model.product;
-import model.quanlydao;
-import model.sanphamdao;
-import model.timkiemdao;
-import model.user;
 
-/**
- *
- * @author LENOVO
- */
-@WebServlet(name = "sanpham", urlPatterns = {"/sanpham"})
-public class sanpham extends HttpServlet {
+@WebServlet(name = "xoanguoi", urlPatterns = {"/xoanguoi"})
+public class xoanguoi extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,10 +29,10 @@ public class sanpham extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet sanpham</title>");
+            out.println("<title>Servlet xoanguoi</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet sanpham at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet xoanguoi at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -63,19 +50,12 @@ public class sanpham extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String tukhoa = request.getParameter("tukhoa");
-        List<product> ds;
-        if (tukhoa != null && !tukhoa.trim().isEmpty()) {
-            timkiemdao searchDao = new timkiemdao();
-            ds = timkiemdao.timKiem(tukhoa);
-            request.setAttribute("searchKeyword", tukhoa);
-        } else {
-            sanphamdao dao = new sanphamdao();
-            ds = dao.GetALL();
+        String id = request.getParameter("id");
+        if (id != null) {
+            model.xoanguoi dao = new model.xoanguoi();
+            dao.delete(id);
         }
-        request.setAttribute("ds", ds);
-        request.getRequestDispatcher("sanpham.jsp").forward(request, response);
-         
+        response.sendRedirect("quanly");
     }
 
     /**

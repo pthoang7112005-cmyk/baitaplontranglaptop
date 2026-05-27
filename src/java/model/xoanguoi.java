@@ -11,28 +11,21 @@ import java.sql.PreparedStatement;
  *
  * @author LENOVO
  */
-public class dangkydao {
+public class xoanguoi {
     Connection connect = null;
     PreparedStatement ps = null;
-
-    public boolean Add(user u) {
+    
+    public void delete(String id) {
         try {
             if (connect == null || connect.isClosed()) {
                 connect = new connectusear().connect();
             }
-            
-            String sql = "INSERT INTO user (username, password, email, full_name, role) VALUES (?, ?, ?, ?, ?)";
+            String sql = "DELETE FROM user WHERE user_id =?";
             ps = connect.prepareStatement(sql);
-            ps.setString(1, u.getUsername());
-            ps.setString(2, u.getPassword());
-            ps.setString(3, u.getEmail());
-            ps.setString(4, u.getFullnameString());
-            ps.setInt(5, u.getRole()); 
-            int row = ps.executeUpdate();
-            return row > 0;
+            ps.setString(1, id);
+            ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
     }
 }

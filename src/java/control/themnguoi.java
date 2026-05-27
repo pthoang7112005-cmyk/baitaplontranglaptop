@@ -11,19 +11,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
-import model.product;
-import model.quanlydao;
-import model.sanphamdao;
-import model.timkiemdao;
-import model.user;
 
 /**
  *
  * @author LENOVO
  */
-@WebServlet(name = "sanpham", urlPatterns = {"/sanpham"})
-public class sanpham extends HttpServlet {
+@WebServlet(name = "themnguoi", urlPatterns = {"/themnguoi"})
+public class themnguoi extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,10 +36,10 @@ public class sanpham extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet sanpham</title>");
+            out.println("<title>Servlet themnguoi</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet sanpham at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet themnguoi at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -63,19 +57,7 @@ public class sanpham extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String tukhoa = request.getParameter("tukhoa");
-        List<product> ds;
-        if (tukhoa != null && !tukhoa.trim().isEmpty()) {
-            timkiemdao searchDao = new timkiemdao();
-            ds = timkiemdao.timKiem(tukhoa);
-            request.setAttribute("searchKeyword", tukhoa);
-        } else {
-            sanphamdao dao = new sanphamdao();
-            ds = dao.GetALL();
-        }
-        request.setAttribute("ds", ds);
-        request.getRequestDispatcher("sanpham.jsp").forward(request, response);
-         
+        processRequest(request, response);
     }
 
     /**
@@ -89,7 +71,27 @@ public class sanpham extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        request.setCharacterEncoding("UTF-8");
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String email = request.getParameter("email");
+        String fullname = request.getParameter("fullname");
+        int role = 1; // Default to User
+        try {
+            role = Integer.parseInt(request.getParameter("role"));
+        } catch (NumberFormatException e) {
+            // Ignore and use default
+        }
+
+        model.user u = new model.user(0, role, username, password, email, fullname);
+        model.dangkydao dao = new model.dangkydao();
+        boolean isSuccess = dao.Add(u);
+        if (isSuccess) {
+            response.sendRedirect("quanly");
+        } else {
+            request.setAttribute("error", "Thêm thất bại! Tên đăng nhập đã tồn tại hoặc có lỗi xảy ra.");
+            request.getRequestDispatcher("themnguoi.jsp").forward(request, response);
+        }
     }
 
     /**

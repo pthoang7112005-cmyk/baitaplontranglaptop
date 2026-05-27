@@ -188,12 +188,12 @@
                     } 
                 %>
 
-                <form action="dangnhap" method="POST">
+                <form action="dangnhap" method="POST" autocomplete="off">
                     <div class="mb-3">
                         <label for="username" class="form-label fw-bold" style="color: #495057; font-size: 0.9rem;">Tên đăng nhập</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-user"></i></span>
-                            <input type="text" class="form-control" id="username" name="username" placeholder="Nhập tên đăng nhập" required />
+                            <input type="text" class="form-control" id="username" name="username" placeholder="Nhập tên đăng nhập" required autocomplete="off" value="" />
                         </div>
                     </div>
                     
@@ -201,7 +201,7 @@
                         <label for="password" class="form-label fw-bold" style="color: #495057; font-size: 0.9rem;">Mật khẩu</label>
                         <div class="input-group">
                             <span class="input-group-text icon-pink"><i class="fas fa-lock"></i></span>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Nhập mật khẩu" required />
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Nhập mật khẩu" required autocomplete="new-password" value="" />
                         </div>
                     </div>
                     

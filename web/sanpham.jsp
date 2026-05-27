@@ -254,7 +254,7 @@
                 </form> 
                 <!-- Giỏ hàng & Tài khoản -->
                 <div class="d-flex align-items-center gap-3">
-                    <a href="#" class="text-decoration-none text-dark d-flex align-items-center fw-semibold">
+                    <a href="giohang" class="text-decoration-none text-dark d-flex align-items-center fw-semibold">
                         <i class="fas fa-shopping-cart fs-5 me-1" style="color: #0d6efd;"></i> <span class="d-none d-md-inline">Giỏ hàng</span>
                     </a>
                     <a href="dangnhap.jsp" class="text-decoration-none text-dark d-flex align-items-center fw-semibold">
@@ -290,8 +290,7 @@
                 } else {
                     for (product a : list) {
                 %>
-                <%-- Card sản phẩm giữ nguyên như cũ --%>
-                <%-- ✅ Phải có đầy đủ code card như file gốc --%>
+                
                 <div class="col-6 col-md-4 col-lg-3 d-flex align-items-stretch">
                     <a href="chitiet?id=<%= a.getId()%>" class="text-decoration-none text-dark w-100">
                         <div class="card w-100 shadow-sm product-card position-relative">
@@ -310,6 +309,7 @@
                                     <i class="fas fa-star-half-alt"></i>
                                     <span class="text-muted ms-1">(42)</span>
                                 </div>
+                               
                                 <button class="btn btn-buy mt-auto"><i class="fas fa-cart-plus me-1"></i> Mua ngay</button>
                             </div>
                         </div>

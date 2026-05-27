@@ -1,18 +1,18 @@
 <%-- 
-    Document   : quanly
-    Created on : Apr 22, 2026, 5:03:35 PM
+    Document   : quanlysanpham
+    Created on : (Current Date)
     Author     : LENOVO
 --%>
 
 <%@page import="java.util.List"%>
-<%@page import="model.user"%>
+<%@page import="model.product"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="vi">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Quản lý người dùng</title>
+        <title>Quản lý sản phẩm</title>
         <!-- Bootstrap 5 CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <!-- FontAwesome -->
@@ -152,6 +152,7 @@
                 padding: 15px;
                 text-align: left;
                 border-bottom: 1px solid #dee2e6;
+                vertical-align: middle;
             }
             th {
                 background: #f8f9fa;
@@ -200,6 +201,17 @@
                 background-color: #d63384;
                 box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             }
+            .product-img {
+                width: 60px;
+                height: 60px;
+                object-fit: cover;
+                border-radius: 6px;
+                border: 1px solid #dee2e6;
+            }
+            .price-tag {
+                font-weight: bold;
+                color: #e83e8c;
+            }
             /* Animations */
             .page-enter {
                 animation: fadeInSlideUp 0.5s ease-out forwards;
@@ -215,64 +227,60 @@
         <div class="app-container page-enter">
             <div class="admin-panel">
                 <h2><i class="fas fa-user-shield me-2"></i>Admin</h2>
-                <a href="quanly" class="active"><i class="fas fa-users me-2"></i>Quản lý người dùng</a>
-                <a href="quanlysanpham"><i class="fas fa-box-open me-2"></i>Quản lý sản phẩm</a>
+                <a href="quanly"><i class="fas fa-users me-2"></i>Quản lý người dùng</a>
+                <a href="quanlysanpham" class="active"><i class="fas fa-box-open me-2"></i>Quản lý sản phẩm</a>
                 <a href="quanlydonhang"><i class="fas fa-shopping-cart me-2"></i>Quản lý đơn hàng</a>
             </div>
             
             <div class="main-content">
                 <div class="header-top">
-                    <h1><i class="fas fa-list-alt me-2"></i>Danh sách người dùng</h1>
+                    <h1><i class="fas fa-box me-2"></i>Danh sách sản phẩm</h1>
                     <div class="user-info">
                         <span><i class="fas fa-user-circle fs-5 me-1"></i> admin01 ▾</span>
                         <a href="dangnhap.jsp" style="margin-left: 15px;"><i class="fas fa-sign-out-alt me-1"></i>Đăng xuất</a>
                     </div>
                 </div>
 
-                <a href="themnguoi.jsp" class="btn-add"><i class="fas fa-plus me-1"></i> Thêm mới người dùng</a>
+                <a href="themsanpham.jsp" class="btn-add"><i class="fas fa-plus me-1"></i> Thêm mới sản phẩm</a>
 
                 <table>
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>User Name</th>
-                            <th>Password</th>
-                            <th>Email</th>
-                            <th>Full Name</th>
-                            <th>Role</th>
+                            <th>Hình ảnh</th>
+                            <th>Tên sản phẩm</th>
+                            <th>Thương hiệu</th>
+                            <th>Số lượng</th>
+                            <th>Giá (VNĐ)</th>
                             <th>Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
                         <%
-                            List<user> list = (List<user>) request.getAttribute("ds");
+                            List<product> list = (List<product>) request.getAttribute("ds");
                             if (list != null && !list.isEmpty()) {
-                                for (user dsxm : list) {
+                                for (product p : list) {
                         %>
                         <tr>
-                            <td><%=dsxm.getId()%></td>
-                            <td><%=dsxm.getUsername()%></td>
-                            <td><%=dsxm.getPassword()%></td>
-                            <td><%=dsxm.getEmail()%></td>
-                            <td><%=dsxm.getFullnameString()%></td>
+                            <td><%= p.getId()%></td>
                             <td>
-                                <% if (dsxm.getRole() == 0) { %>
-                                <span style="color: red; font-weight: bold;">Admin</span>
-                                <% } else { %>
-                                User
-                                <% }%>
+                                <img src="<%= p.getImageString() %>" alt="<%= p.getNameString() %>" class="product-img" onerror="this.src='img/download.jpg';">
                             </td>
+                            <td><strong><%= p.getNameString() %></strong></td>
+                            <td><%= p.getBrandString() %></td>
+                            <td><%= p.getSoluong() %></td>
+                            <td class="price-tag"><%= String.format("%,.0f", p.getMoney()) %> đ</td>
                             <td>
-                                <a href="sua.jsp?id=<%=dsxm.getId()%>" class="btn-edit"><i class="fas fa-edit"></i> Sửa</a>
-                                <a href="xoanguoi?id=<%=dsxm.getId()%>" class="btn-delete" onclick="return confirm('Bạn có chắc chắn muốn xóa user này không?');"><i class="fas fa-trash-alt"></i> Xóa</a>
+                                <a href="suasanpham.jsp?id=<%= p.getId() %>" class="btn-edit"><i class="fas fa-edit"></i> Sửa</a>
+                                <a href="xoasanpham?id=<%= p.getId() %>" class="btn-delete" onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?');"><i class="fas fa-trash-alt"></i> Xóa</a>
                             </td>
                         </tr>
                         <%
-                            }
-                        } else {
+                                }
+                            } else {
                         %>
                         <tr>
-                            <td colspan="7" style="text-align: center; color: #777;">Không có dữ liệu người dùng</td>
+                            <td colspan="7" style="text-align: center; color: #777; padding: 20px;">Không có dữ liệu sản phẩm</td>
                         </tr>
                         <%
                             }

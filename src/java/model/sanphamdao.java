@@ -75,4 +75,8 @@ public class sanphamdao {
         }
         return null;
     }
+
+    public product getById(int id) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

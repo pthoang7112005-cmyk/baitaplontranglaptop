@@ -11,19 +11,18 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 import model.product;
-import model.quanlydao;
 import model.sanphamdao;
-import model.timkiemdao;
-import model.user;
 
 /**
  *
  * @author LENOVO
  */
-@WebServlet(name = "sanpham", urlPatterns = {"/sanpham"})
-public class sanpham extends HttpServlet {
+@WebServlet(name = "giohang", urlPatterns = {"/giohang"})
+public class giohang extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,10 +41,10 @@ public class sanpham extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet sanpham</title>");
+            out.println("<title>Servlet giohang</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet sanpham at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet giohang at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -63,19 +62,35 @@ public class sanpham extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String tukhoa = request.getParameter("tukhoa");
-        List<product> ds;
-        if (tukhoa != null && !tukhoa.trim().isEmpty()) {
-            timkiemdao searchDao = new timkiemdao();
-            ds = timkiemdao.timKiem(tukhoa);
-            request.setAttribute("searchKeyword", tukhoa);
-        } else {
-            sanphamdao dao = new sanphamdao();
-            ds = dao.GetALL();
+         String action = request.getParameter("action");
+        HttpSession session = request.getSession();
+        List<product> gioHang = (List<product>) session.getAttribute("gioHang");
+        if (gioHang == null) {
+            gioHang = new ArrayList<>();
+            session.setAttribute("gioHang", gioHang);
         }
-        request.setAttribute("ds", ds);
-        request.getRequestDispatcher("sanpham.jsp").forward(request, response);
-         
+        if ("them".equals(action)) {
+            // Thêm sản phẩm vào giỏ
+            int id = Integer.parseInt(request.getParameter("id"));
+            sanphamdao dao = new sanphamdao();
+            product sp = dao.GetById(id); // bạn cần thêm method này vào sanphamdao
+            if (sp != null) {
+                gioHang.add(sp);
+            }
+            response.sendRedirect("giohang"); // quay lại trang giỏ hàng
+            } else if ("xoa".equals(action)) {
+            // Xóa sản phẩm khỏi giỏ
+            int index = Integer.parseInt(request.getParameter("index"));
+            if (index >= 0 && index < gioHang.size()) {
+                gioHang.remove(index);
+            }
+            response.sendRedirect("giohang");
+
+        } else {
+            // Hiển thị giỏ hàng
+            request.setAttribute("gioHang", gioHang);
+            request.getRequestDispatcher("giohang.jsp").forward(request, response);
+        }
     }
 
     /**
